@@ -4,11 +4,14 @@
     "react-app/jest"
   ],
   "rules": {
+    "import/first": "off",
     "no-lone-blocks": "off",
     "react-hooks/exhaustive-deps": "warn",
     "no-unused-vars": "warn",
     "jsx-a11y/img-redundant-alt": "warn",
-    "eqeqeq": "warn"
+    "eqeqeq": "warn",
+    "import/order": "off",
+    "import/newline-after-import": "off"
   },
   "env": {
     "browser": true,
