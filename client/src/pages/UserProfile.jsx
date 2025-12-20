@@ -6,6 +6,7 @@ import { FaCheck } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 import axios from "axios";
+import { getImageUrl } from "../utils/imageUtils";
 
 const UserProfile = () => {
   const [error, setError] = useState("");
@@ -94,7 +95,7 @@ const UserProfile = () => {
           <div className="avatar__wrapper">
             <div className="profile__avatar">
               <img
-                src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${avatar}`}
+                src={getImageUrl(avatar, 'avatar')}
                 alt=""
               />
             </div>

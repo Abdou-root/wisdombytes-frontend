@@ -8,6 +8,7 @@ import DeletePost from "./DeletePost";
 import { UserContext } from "../context/userContext";
 import axios from "axios";
 import { sanitizeHTML } from "../utils/sanitize";
+import { getImageUrl } from "../utils/imageUtils";
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -65,7 +66,7 @@ const PostDetail = () => {
           </div>
           <h1>{post.title}</h1>
           <div className="post-detail__thumbnail">
-            <img src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${post.thumbnail}`} alt="" />
+            <img src={getImageUrl(post.thumbnail, 'thumbnail')} alt="" />
           </div>
           <div dangerouslySetInnerHTML={{__html: sanitizeHTML(post.description)}}></div>
         </div> 

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Loader from '../components/Loader'
+import { getImageUrl } from '../utils/imageUtils';
 
 const Authors = () => {
   const [authors, setAuthors] = useState([]);
@@ -35,7 +36,7 @@ const Authors = () => {
             return (
               <Link key={id} to={`/posts/users/${id}`} className="author">
                 <div className="author__avatar">
-                  <img src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${avatar}`} alt={`Image of ${name}`} />
+                  <img src={getImageUrl(avatar, 'avatar')} alt={`Image of ${name}`} />
                 </div>
                 <div className="author__info">
                   <h4>{name}</h4>

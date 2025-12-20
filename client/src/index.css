@@ -55,6 +55,7 @@ body {
   font-size: 0.9rem;
   line-height: 1.6;
   color: var(--color-dark);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a {
@@ -138,6 +139,11 @@ section {
   font-size: 0.8rem;
   padding: 0.3rem 0.7rem;
   font-weight: 400;
+}
+
+.btn.lg {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
 }
 
 .btn.danger {
@@ -543,6 +549,27 @@ textarea.error {
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
+}
+
+.dashboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.dashboard__empty {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.dashboard__empty h2 {
+  margin-bottom: 1rem;
+}
+
+.dashboard__empty p {
+  margin-bottom: 2rem;
+  color: var(--color-gray-500);
 }
 
 .dashboard__post {

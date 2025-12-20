@@ -4,7 +4,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Logo from "../images/logo1.png";
 import Logo2 from "../images/logo2.png";
-import { FaBars } from "react-icons/fa";
+import { FaBars, FaPlus } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import { LuPalette } from "react-icons/lu";
 import { UserContext } from "../context/userContext";
@@ -25,12 +25,29 @@ const Header = () => {
   const [activeBg, setActiveBg] = useState("bg-1");
 
   useEffect(() => {
-    // Retrieve theme from local storage if available
+    // Check system preference
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    // Get stored theme or use system preference
     const storedTheme = localStorage.getItem("theme");
-    if (storedTheme) {
-      setActiveBg(storedTheme);
-      applyTheme(storedTheme);
-    }
+    const initialTheme = storedTheme || (systemPrefersDark ? "bg-3" : "bg-1");
+    
+    setActiveBg(initialTheme);
+    applyTheme(initialTheme);
+    
+    // Listen for system theme changes
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e) => {
+      if (!localStorage.getItem("theme")) {
+        // Only auto-switch if user hasn't manually set a theme
+        const newTheme = e.matches ? "bg-3" : "bg-1";
+        setActiveBg(newTheme);
+        applyTheme(newTheme);
+      }
+    };
+    mediaQuery.addEventListener('change', handleChange);
+    
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   const openThemeModal = () => {
@@ -64,22 +81,26 @@ const Header = () => {
 
   const applyTheme = (theme) => {
     switch (theme) {
-      case "bg-1":
+      case "bg-1": // Light mode
         lightColorLightness = "92%";
         whiteColorLightness = "100%";
         darkColorLightness = "17%";
         break;
-      case "bg-2":
+      case "bg-2": // Dim mode
         darkColorLightness = "95%";
         whiteColorLightness = "20%";
         lightColorLightness = "15%";
         break;
-      case "bg-3":
+      case "bg-3": // Dark mode
         darkColorLightness = "95%";
         whiteColorLightness = "10%";
         lightColorLightness = "0%";
         break;
       default:
+        // Default to light
+        lightColorLightness = "92%";
+        whiteColorLightness = "100%";
+        darkColorLightness = "17%";
         break;
     }
     changeBG();
@@ -133,8 +154,8 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link to="/create" onClick={closeNavHandler}>
-                New Post
+              <Link to="/create" onClick={closeNavHandler} className="btn sm primary">
+                <FaPlus /> New Post
               </Link>
             </li>
             <li>

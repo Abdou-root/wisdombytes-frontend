@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import PostAuthor from './PostAuthor'
 import { sanitizeHTML, stripHTML } from '../utils/sanitize'
+import { getImageUrl } from '../utils/imageUtils'
 
 const PostItem = ({ postID, category, title, description, authorID, thumbnail, createdAt
  }) => {
@@ -13,7 +14,7 @@ const PostItem = ({ postID, category, title, description, authorID, thumbnail, c
     return (
         <article className="post">
             <div className="post__thumbnail">
-                <img src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${thumbnail}`} alt={title} />
+                <img src={getImageUrl(thumbnail, 'thumbnail')} alt={title} />
             </div>
             <div className="post__content">
                 <Link to={`/posts/${postID}`}>

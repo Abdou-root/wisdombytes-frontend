@@ -6,6 +6,7 @@ import { UserContext } from "../context/userContext";
 import axios from "axios";
 import Loader from "../components/Loader";
 import DeletePost from "./DeletePost";
+import { getImageUrl } from "../utils/imageUtils";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -48,37 +49,52 @@ const Dashboard = () => {
 
   return (
     <section className="dashboard">
-      {posts.length > 0 ? (
-        <div className="container dashboard__container">
-          {posts.map((post) => {
-            return (
-              <article key={post.id} className="dashboard__post">
-                <div className="dashboard__post-thumbnail">
-                  <img
-                    src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${post.thumbnail}`}
-                    alt=""
-                  />
-                </div>
-                <h5>{post.title}</h5>
-                <div className="dashboard__post-actions">
-                  <Link to={`/posts/${post._id}`} className="btn sm">
-                    View
-                  </Link>
-                  <Link
-                    to={`/posts/${post._id}/edit`}
-                    className="btn sm primary"
-                  >
-                    Edit
-                  </Link>
-                  <DeletePost postId={post._id} />
-                </div>
-              </article>
-            );
-          })}
+      <div className="container dashboard__container">
+        <div className="dashboard__header">
+          <h2>My Posts</h2>
+          <Link to="/create" className="btn primary">
+            + Create New Post
+          </Link>
         </div>
-      ) : (
-        <h2 className="center">You haven't posted yet</h2>
-      )}
+        
+        {posts.length > 0 ? (
+          <>
+            {posts.map((post) => {
+              return (
+                <article key={post.id} className="dashboard__post">
+                  <div className="dashboard__post-thumbnail">
+                    <img
+                      src={getImageUrl(post.thumbnail, 'thumbnail')}
+                      alt=""
+                    />
+                  </div>
+                  <h5>{post.title}</h5>
+                  <div className="dashboard__post-actions">
+                    <Link to={`/posts/${post._id}`} className="btn sm">
+                      View
+                    </Link>
+                    <Link
+                      to={`/posts/${post._id}/edit`}
+                      className="btn sm primary"
+                    >
+                      Edit
+                    </Link>
+                    <DeletePost postId={post._id} />
+                  </div>
+                </article>
+              );
+            })}
+          </>
+        ) : (
+          <div className="dashboard__empty">
+            <h2>You haven't posted yet</h2>
+            <p>Share your knowledge with the community!</p>
+            <Link to="/create" className="btn primary lg">
+              Create Your First Post
+            </Link>
+          </div>
+        )}
+      </div>
     </section>
   );
 };

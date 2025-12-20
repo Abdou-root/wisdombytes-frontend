@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from 'axios';
 import ReactTimeAgo from 'react-time-ago';
 import TimeAgo from 'javascript-time-ago';
+import { getImageUrl } from '../utils/imageUtils';
 
 
 import en from 'javascript-time-ago/locale/en.json'
@@ -30,7 +31,7 @@ const PostAuthor = ({ authorID, createdAt }) => {
   return (
     <Link to={`/posts/users/${authorID}`} className="post__author">
       <div className="post__author-avatar">
-        <img src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${author?.avatar}`} alt="" />
+        <img src={getImageUrl(author?.avatar, 'avatar')} alt="" />
       </div>
       <div className="post__author-details">
         <h5>By: {author?.name}</h5>
