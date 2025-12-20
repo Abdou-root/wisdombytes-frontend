@@ -64,7 +64,7 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/users/login`, userData);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/users/login`, userData, { withCredentials: true });
       const user = await response.data;
       setCurrentUser(user);
       navigate('/');
