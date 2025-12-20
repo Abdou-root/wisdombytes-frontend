@@ -10,7 +10,9 @@ import { getImageUrl } from "../utils/imageUtils";
 
 const UserProfile = () => {
   const [error, setError] = useState("");
-  const [avatar, setAvatar] = useState("");
+  const [avatar, setAvatar] = useState(""); // Server URL
+  const [avatarPreview, setAvatarPreview] = useState(""); // Local file preview
+  const [avatarFile, setAvatarFile] = useState(null); // File object for upload
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -44,17 +46,32 @@ const UserProfile = () => {
     }
   }, [currentUser, navigate]);
 
+  // Cleanup preview URL on unmount
+  useEffect(() => {
+    return () => {
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+    };
+  }, [avatarPreview]);
+
   const changeAvatarHandler = async () => {
     setIsAvatarTouched(false);
     try {
       const postData = new FormData();
-      postData.set("avatar", avatar);
+      postData.set("avatar", avatarFile);
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/users/change-avatar`,
         postData,
         { withCredentials: true }
       );
+      // Clean up preview URL
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+      }
       setAvatar(response?.data.avatar);
+      setAvatarPreview("");
+      setAvatarFile(null);
     } catch (error) {
       console.log(error);
     }
@@ -95,7 +112,7 @@ const UserProfile = () => {
           <div className="avatar__wrapper">
             <div className="profile__avatar">
               <img
-                src={getImageUrl(avatar, 'avatar')}
+                src={avatarPreview || getImageUrl(avatar, 'avatar')}
                 alt=""
               />
             </div>
@@ -104,7 +121,18 @@ const UserProfile = () => {
                 type="file"
                 name="avatar"
                 id="avatar"
-                onChange={(e) => setAvatar(e.target.files[0])}
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    // Clean up previous preview if exists
+                    if (avatarPreview) {
+                      URL.revokeObjectURL(avatarPreview);
+                    }
+                    setAvatarFile(file);
+                    setAvatarPreview(URL.createObjectURL(file));
+                    setIsAvatarTouched(true);
+                  }
+                }}
                 accept="png, jpg, jpeg"
               />
               <label htmlFor="avatar" onClick={() => setIsAvatarTouched(true)}>

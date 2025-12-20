@@ -256,43 +256,62 @@ footer {
 /*=============== Posts ===============*/
 .posts__container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2.5rem;
   padding-top: 1.5rem;
 }
 
 .post {
   background: var(--color-white);
-  padding: 1rem;
+  padding: 0;
   border-radius: var(--radius-4);
-  padding-bottom: 2rem;
+  overflow: hidden;
   transition: var(--transition);
-  cursor: default;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
 }
 
 .post:hover {
-  box-shadow: 0 1.5rem 2rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
 }
 
 .post__thumbnail {
   border-radius: var(--radius-3);
   overflow: hidden;
   height: 16rem;
+  width: 100%;
+  position: relative;
+}
+
+.post__thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .post__content {
-  margin-top: 1.5rem;
+  padding: 1.5rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .post__content h3 {
-  margin: 1rem 0 0.6rem;
+  margin: 0 0 0.8rem;
+  line-height: 1.4;
+  font-size: 1.2rem;
 }
 
 .post__footer {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-top: 2rem;
+  margin-top: auto;
+  padding-top: 1rem;
 }
 
 .post__author {
@@ -758,7 +777,7 @@ textarea.error {
   }
   .posts__container {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 2rem;
   }
   .footer__categories {
     flex-direction: column;

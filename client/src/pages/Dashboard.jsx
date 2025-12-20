@@ -57,33 +57,33 @@ const Dashboard = () => {
           </Link>
         </div>
         
-        {posts.length > 0 ? (
+      {posts.length > 0 ? (
           <>
-            {posts.map((post) => {
-              return (
-                <article key={post.id} className="dashboard__post">
-                  <div className="dashboard__post-thumbnail">
-                    <img
+          {posts.map((post) => {
+            return (
+              <article key={post.id} className="dashboard__post">
+                <div className="dashboard__post-thumbnail">
+                  <img
                       src={getImageUrl(post.thumbnail, 'thumbnail')}
-                      alt=""
-                    />
-                  </div>
-                  <h5>{post.title}</h5>
-                  <div className="dashboard__post-actions">
-                    <Link to={`/posts/${post._id}`} className="btn sm">
-                      View
-                    </Link>
-                    <Link
-                      to={`/posts/${post._id}/edit`}
-                      className="btn sm primary"
-                    >
-                      Edit
-                    </Link>
-                    <DeletePost postId={post._id} />
-                  </div>
-                </article>
-              );
-            })}
+                    alt=""
+                  />
+                </div>
+                <h5>{post.title}</h5>
+                <div className="dashboard__post-actions">
+                  <Link to={`/posts/${post._id}`} className="btn sm">
+                    View
+                  </Link>
+                  <Link
+                    to={`/posts/${post._id}/edit`}
+                    className="btn sm primary"
+                  >
+                    Edit
+                  </Link>
+                  <DeletePost postId={post._id} />
+                </div>
+              </article>
+            );
+          })}
           </>
         ) : (
           <div className="dashboard__empty">
@@ -92,8 +92,8 @@ const Dashboard = () => {
             <Link to="/create" className="btn primary lg">
               Create Your First Post
             </Link>
-          </div>
-        )}
+        </div>
+      )}
       </div>
     </section>
   );

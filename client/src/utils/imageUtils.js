@@ -7,20 +7,27 @@
  * @returns {string} - Full image URL
  */
 export const getImageUrl = (imagePath, type = 'thumbnail') => {
+  // Handle null, undefined, or empty values
   if (!imagePath) {
-    // Return default placeholder based on type
     return type === 'avatar' 
       ? 'https://via.placeholder.com/150' 
       : 'https://via.placeholder.com/400x300';
   }
   
+  // Handle File objects (for preview before upload)
+  if (imagePath instanceof File) {
+    return URL.createObjectURL(imagePath);
+  }
+  
+  // Ensure it's a string before calling string methods
+  const imagePathStr = String(imagePath);
+  
   // If it's already a full URL (Cloudinary), return as-is
-  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-    return imagePath;
+  if (imagePathStr.startsWith('http://') || imagePathStr.startsWith('https://')) {
+    return imagePathStr;
   }
   
   // Legacy local file path - return placeholder
-  // In production, these won't work, so show placeholder
   return type === 'avatar' 
     ? 'https://via.placeholder.com/150' 
     : 'https://via.placeholder.com/400x300';
