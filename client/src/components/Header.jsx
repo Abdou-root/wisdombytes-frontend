@@ -8,6 +8,7 @@ import { FaBars, FaPlus } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import { LuPalette } from "react-icons/lu";
 import { UserContext } from "../context/userContext";
+import { getImageUrl } from "../utils/imageUtils";
 
 const Header = () => {
   const closeNavHandler = () => {
@@ -149,8 +150,13 @@ const Header = () => {
               <Link
                 to={`/profile/${currentUser._id}`}
                 onClick={closeNavHandler}
+                className="nav__avatar"
+                title={currentUser?.name || "Profile"}
               >
-                {currentUser?.name}
+                <img 
+                  src={getImageUrl(currentUser?.avatar, 'avatar')} 
+                  alt={currentUser?.name ? `${currentUser.name}'s profile picture` : "User profile picture"} 
+                />
               </Link>
             </li>
             <li>

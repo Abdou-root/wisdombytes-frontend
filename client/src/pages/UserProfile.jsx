@@ -113,7 +113,7 @@ const UserProfile = () => {
             <div className="profile__avatar">
               <img
                 src={avatarPreview || getImageUrl(avatar, 'avatar')}
-                alt=""
+                alt={name ? `${name}'s profile picture` : "Your profile picture"}
               />
             </div>
             <form className="avatar__form">
