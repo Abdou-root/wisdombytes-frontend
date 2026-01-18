@@ -25,6 +25,9 @@ import ErrorBoundary from './components/ErrorBoundary';
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 
+// Make React available globally for libraries that need it
+window.React = React;
+
 
 
 const router = createBrowserRouter([

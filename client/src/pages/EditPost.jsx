@@ -3,8 +3,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import MdEditor from 'react-markdown-editor-lite';
-import 'react-markdown-editor-lite/lib/index.css';
+import MDEditor from '@uiw/react-md-editor';
+import '@uiw/react-md-editor/markdown-editor.css';
+import MarkdownIt from 'markdown-it';
 import TurndownService from 'turndown';
 import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../components/Loader"
@@ -31,6 +32,7 @@ const EditPost = () => {
   const { currentUser } = useContext(UserContext);
 
   const turndownService = new TurndownService();
+  const md = new MarkdownIt();
 
   // redirect to login page for any user with null token
   useEffect(() => {
@@ -60,7 +62,8 @@ const EditPost = () => {
       // Convert HTML to markdown
       setMarkdownValue(turndownService.turndown(description));
     } else if (mode === 'rich' && editorMode === 'markdown') {
-      // Markdown editor already sets description to HTML
+      // Convert markdown to HTML
+      setDescription(md.render(markdownValue));
     }
     setEditorMode(mode);
   };
@@ -184,12 +187,12 @@ const EditPost = () => {
               }}
             />
           ) : (
-            <MdEditor
+            <MDEditor
               value={markdownValue}
-              style={{ height: '300px' }}
-              onChange={({ html, text }) => {
+              onChange={(value) => {
+                setMarkdownValue(value);
+                const html = md.render(value);
                 setDescription(html);
-                setMarkdownValue(text);
                 if (fieldErrors.description) {
                   const validation = validateDescription(html);
                   setFieldErrors(prev => ({
@@ -198,6 +201,7 @@ const EditPost = () => {
                   }));
                 }
               }}
+              data-color-mode="light"
             />
           )}
             {fieldErrors.description && <span className="field-error">{fieldErrors.description}</span>}
