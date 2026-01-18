@@ -281,8 +281,8 @@ footer {
 /*=============== Posts ===============*/
 .posts__container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
   padding-top: 1.5rem;
 }
 
@@ -304,11 +304,9 @@ footer {
 }
 
 .post__thumbnail {
-  border-radius: var(--radius-3);
   overflow: hidden;
-  height: 16rem;
+  aspect-ratio: 16 / 10;
   width: 100%;
-  position: relative;
 }
 
 .post__thumbnail img {
@@ -316,6 +314,11 @@ footer {
   height: 100%;
   object-fit: cover;
   object-position: center;
+  transition: transform 0.3s ease;
+}
+
+.post:hover .post__thumbnail img {
+  transform: scale(1.05);
 }
 
 .post__content {
@@ -326,9 +329,25 @@ footer {
 }
 
 .post__content h3 {
-  margin: 0 0 0.8rem;
+  margin: 0 0 0.6rem;
   line-height: 1.4;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
+  min-height: 3rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.post__description {
+  color: var(--color-gray-500);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  min-height: 3.8rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .post__footer {
@@ -766,6 +785,12 @@ textarea.error {
 
 /*=============== Media Queries ===============*/
 
+@media screen and (max-width: 1024px) {
+  .posts__container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media screen and (max-width: 800px) {
   h1 {
     font-size: 2rem;
@@ -860,7 +885,15 @@ textarea.error {
   }
   .posts__container {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.5rem;
+  }
+
+  .post__content h3 {
+    min-height: auto;
+  }
+
+  .post__description {
+    min-height: auto;
   }
   .footer__categories {
     flex-direction: column;
@@ -963,8 +996,8 @@ textarea.error {
 }
 
 .post-detail__container > div:last-child pre {
-  background: var(--color-gray-900);
-  color: var(--color-light);
+  background: #1e1e2e;
+  color: #cdd6f4;
   padding: 1rem;
   border-radius: var(--radius-2);
   overflow-x: auto;
@@ -978,16 +1011,22 @@ textarea.error {
 
 .post-detail__container > div:last-child p code,
 .post-detail__container > div:last-child li code {
-  background: var(--color-gray-200);
+  background: rgba(127, 132, 156, 0.2);
   padding: 0.2rem 0.4rem;
   border-radius: var(--radius-1);
-  color: var(--color-gray-700);
+  color: var(--color-dark);
 }
 
 .post-detail__container > div:last-child pre code {
   background: transparent;
   padding: 0;
   color: inherit;
+}
+
+/* Code block comment styling */
+.post-detail__container > div:last-child pre code .comment,
+.post-detail__container > div:last-child pre .comment {
+  color: #6c7086;
 }
 
 .post-detail__container > div:last-child table {

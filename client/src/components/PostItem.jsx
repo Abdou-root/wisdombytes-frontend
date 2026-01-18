@@ -7,9 +7,10 @@ import { getImageUrl } from '../utils/imageUtils'
 
 const PostItem = ({ postID, category, title, description, authorID, thumbnail, createdAt
  }) => {
-        const shortDescription = description.length > 145 ? description.substr(0, 145) + '...' : description; 
-        const postTitle = title.length > 30 ? title.substr(0, 30) + '...' : title;
-        const sanitizedDescription = sanitizeHTML(shortDescription); 
+        // Strip HTML first for consistent character counting
+        const plainText = stripHTML(description);
+        const shortDescription = plainText.length > 120 ? plainText.substr(0, 120) + '...' : plainText;
+        const postTitle = title.length > 50 ? title.substr(0, 50) + '...' : title; 
 
     return (
         <article className="post">
@@ -20,7 +21,7 @@ const PostItem = ({ postID, category, title, description, authorID, thumbnail, c
                 <Link to={`/posts/${postID}`}>
                     <h3>{postTitle}</h3>
                 </Link>
-                <p dangerouslySetInnerHTML={{__html: sanitizedDescription}}/>
+                <p className="post__description">{shortDescription}</p>
                 <div className="post__footer">
                     <PostAuthor authorID={authorID} createdAt = {createdAt}/>
                     <Link to={`/posts/categories/${category}`} className='btn category'>{category}</Link>
