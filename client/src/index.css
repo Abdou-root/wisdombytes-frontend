@@ -898,3 +898,28 @@ textarea.error {
     width: 5rem;
   }
 }
+
+/* Editor mode toggle */
+.editor-mode-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.editor-mode-toggle button {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-gray-300);
+  background: var(--color-white);
+  border-radius: var(--radius-1);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.editor-mode-toggle button.active {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.editor-mode-toggle button:hover {
+  background: var(--color-light);
+}

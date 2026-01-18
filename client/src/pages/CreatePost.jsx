@@ -3,6 +3,9 @@
 import React, { useState, useContext, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import MdEditor from 'react-markdown-editor-lite';
+import 'react-markdown-editor-lite/lib/index.css';
+import TurndownService from 'turndown';
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 import axios from "axios";
@@ -17,9 +20,23 @@ const CreatePost = () => {
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editorMode, setEditorMode] = useState('rich');
+  const [markdownValue, setMarkdownValue] = useState('');
   const navigate = useNavigate();
 
   const { currentUser } = useContext(UserContext);
+
+  const turndownService = new TurndownService();
+
+  const handleModeSwitch = (mode) => {
+    if (mode === 'markdown' && editorMode === 'rich') {
+      // Convert HTML to markdown
+      setMarkdownValue(turndownService.turndown(description));
+    } else if (mode === 'rich' && editorMode === 'markdown') {
+      // Markdown editor already sets description to HTML
+    }
+    setEditorMode(mode);
+  };
 
   // redirect to login page for any user with null token
   useEffect(() => {
@@ -80,6 +97,22 @@ const CreatePost = () => {
     <section className="create-post">
       <div className="container">
         <h2>Create Post </h2>
+        <div className="editor-mode-toggle">
+          <button 
+            type="button" 
+            className={editorMode === 'rich' ? 'active' : ''} 
+            onClick={() => handleModeSwitch('rich')}
+          >
+            Rich Text
+          </button>
+          <button 
+            type="button" 
+            className={editorMode === 'markdown' ? 'active' : ''} 
+            onClick={() => handleModeSwitch('markdown')}
+          >
+            Markdown
+          </button>
+        </div>
         {error && <p className="form__error-message">{error}</p> }
         <form className="form create-post__form" onSubmit={createPost}>
           <div>
@@ -112,10 +145,11 @@ const CreatePost = () => {
             ))}
           </select>
           <div>
-          <ReactQuill
-            modules={quillModules}
-            formats={quillFormats}
-            value={description}
+          {editorMode === 'rich' ? (
+            <ReactQuill
+              modules={quillModules}
+              formats={quillFormats}
+              value={description}
               onChange={(value) => {
                 setDescription(value);
                 if (fieldErrors.description) {
@@ -127,6 +161,23 @@ const CreatePost = () => {
                 }
               }}
             />
+          ) : (
+            <MdEditor
+              value={markdownValue}
+              style={{ height: '300px' }}
+              onChange={({ html, text }) => {
+                setDescription(html);
+                setMarkdownValue(text);
+                if (fieldErrors.description) {
+                  const validation = validateDescription(html);
+                  setFieldErrors(prev => ({
+                    ...prev,
+                    description: validation.valid ? undefined : validation.message
+                  }));
+                }
+              }}
+            />
+          )}
             {fieldErrors.description && <span className="field-error">{fieldErrors.description}</span>}
           </div>
           <div>
