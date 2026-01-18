@@ -7,10 +7,18 @@ import DOMPurify from 'dompurify';
  */
 export const sanitizeHTML = (dirty) => {
   if (!dirty) return '';
-  
+
   return DOMPurify.sanitize(dirty, {
-    ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'blockquote', 'a', 'img'],
-    ALLOWED_ATTR: ['href', 'src', 'alt', 'title'],
+    ALLOWED_TAGS: [
+      'p', 'br', 'strong', 'em', 'u', 's', 'del',
+      'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+      'ul', 'ol', 'li',
+      'blockquote', 'a', 'img',
+      'pre', 'code',
+      'table', 'thead', 'tbody', 'tr', 'th', 'td',
+      'hr', 'div', 'span'
+    ],
+    ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'target', 'rel'],
     ALLOW_DATA_ATTR: false
   });
 };

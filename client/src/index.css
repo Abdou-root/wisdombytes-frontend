@@ -923,3 +923,109 @@ textarea.error {
 .editor-mode-toggle button:hover {
   background: var(--color-light);
 }
+
+/*=============== Markdown Content Styles ===============*/
+.post-detail__container > div:last-child {
+  line-height: 1.8;
+}
+
+.post-detail__container > div:last-child h1,
+.post-detail__container > div:last-child h2,
+.post-detail__container > div:last-child h3,
+.post-detail__container > div:last-child h4,
+.post-detail__container > div:last-child h5,
+.post-detail__container > div:last-child h6 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.post-detail__container > div:last-child p {
+  margin-bottom: 1rem;
+}
+
+.post-detail__container > div:last-child ul,
+.post-detail__container > div:last-child ol {
+  list-style: revert;
+  padding-left: 2rem;
+  margin-bottom: 1rem;
+}
+
+.post-detail__container > div:last-child li {
+  margin-bottom: 0.25rem;
+}
+
+.post-detail__container > div:last-child blockquote {
+  border-left: 4px solid var(--color-primary);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: var(--color-gray-500);
+  font-style: italic;
+}
+
+.post-detail__container > div:last-child pre {
+  background: var(--color-gray-900);
+  color: var(--color-light);
+  padding: 1rem;
+  border-radius: var(--radius-2);
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.post-detail__container > div:last-child code {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.post-detail__container > div:last-child p code,
+.post-detail__container > div:last-child li code {
+  background: var(--color-gray-200);
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-1);
+  color: var(--color-gray-700);
+}
+
+.post-detail__container > div:last-child pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.post-detail__container > div:last-child table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.post-detail__container > div:last-child th,
+.post-detail__container > div:last-child td {
+  border: 1px solid var(--color-gray-300);
+  padding: 0.5rem 1rem;
+  text-align: left;
+}
+
+.post-detail__container > div:last-child th {
+  background: var(--color-gray-100);
+  font-weight: 600;
+}
+
+.post-detail__container > div:last-child hr {
+  border: none;
+  border-top: 1px solid var(--color-gray-300);
+  margin: 2rem 0;
+}
+
+.post-detail__container > div:last-child a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.post-detail__container > div:last-child a:hover {
+  text-decoration: none;
+}
+
+.post-detail__container > div:last-child img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-2);
+  margin: 1rem 0;
+}
