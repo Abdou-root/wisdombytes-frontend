@@ -46,6 +46,7 @@ const EditPost = () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/posts/${id}`)
         setTitle(response.data.title);
+        setCategory(response.data.category || 'Uncategorized');
         setDescription(response.data.description);
         // Initialize markdown value if switching later
         setMarkdownValue(turndownService.turndown(response.data.description));
