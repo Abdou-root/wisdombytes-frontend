@@ -198,7 +198,6 @@ const EditPost = () => {
                   }));
                 }
               }}
-              renderHTML={(text) => text}
             />
           )}
             {fieldErrors.description && <span className="field-error">{fieldErrors.description}</span>}
