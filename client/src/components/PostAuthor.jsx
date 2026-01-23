@@ -23,7 +23,7 @@ const PostAuthor = ({ authorID, createdAt }) => {
         );
         setAuthor(response?.data);
       } catch (error) {
-        console.log(error);
+        // Silently fail - author avatar will show default
       }
     };
     getAuthor();

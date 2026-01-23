@@ -104,6 +104,7 @@ const Register = () => {
         return;
       }
       localStorage.setItem('userId', newUser.userId);
+      localStorage.setItem('userEmail', userData.email);
       navigate("/verifyOTP");
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed. Please try again.");
@@ -125,9 +126,13 @@ const Register = () => {
               value={userData.name}
               onChange={changeInputHandler}
               className={fieldErrors.name ? 'error' : ''}
+              autoComplete="name"
               autoFocus
+              aria-label="Full Name"
+              aria-invalid={fieldErrors.name ? 'true' : 'false'}
+              aria-describedby={fieldErrors.name ? 'name-error' : undefined}
             />
-            {fieldErrors.name && <span className="field-error">{fieldErrors.name}</span>}
+            {fieldErrors.name && <span id="name-error" className="field-error">{fieldErrors.name}</span>}
           </div>
           <div>
             <input
@@ -137,8 +142,12 @@ const Register = () => {
               value={userData.email}
               onChange={changeInputHandler}
               className={fieldErrors.email ? 'error' : ''}
+              autoComplete="email"
+              aria-label="Email address"
+              aria-invalid={fieldErrors.email ? 'true' : 'false'}
+              aria-describedby={fieldErrors.email ? 'email-error' : undefined}
             />
-            {fieldErrors.email && <span className="field-error">{fieldErrors.email}</span>}
+            {fieldErrors.email && <span id="email-error" className="field-error">{fieldErrors.email}</span>}
           </div>
           <div>
             <input
@@ -148,10 +157,14 @@ const Register = () => {
               value={userData.password}
               onChange={changeInputHandler}
               className={fieldErrors.password ? 'error' : ''}
+              autoComplete="new-password"
+              aria-label="Password"
+              aria-invalid={fieldErrors.password ? 'true' : 'false'}
+              aria-describedby={fieldErrors.password ? 'password-error password-strength' : 'password-strength'}
             />
-            {fieldErrors.password && <span className="field-error">{fieldErrors.password}</span>}
+            {fieldErrors.password && <span id="password-error" className="field-error">{fieldErrors.password}</span>}
             {passwordStrength && userData.password && (
-              <div className={`password-strength ${passwordStrength.strength}`}>
+              <div id="password-strength" className={`password-strength ${passwordStrength.strength}`}>
                 <span>Password strength: {passwordStrength.strength}</span>
               </div>
             )}
@@ -164,8 +177,12 @@ const Register = () => {
               value={userData.password2}
               onChange={changeInputHandler}
               className={fieldErrors.password2 ? 'error' : ''}
+              autoComplete="new-password"
+              aria-label="Confirm password"
+              aria-invalid={fieldErrors.password2 ? 'true' : 'false'}
+              aria-describedby={fieldErrors.password2 ? 'password2-error' : undefined}
             />
-            {fieldErrors.password2 && <span className="field-error">{fieldErrors.password2}</span>}
+            {fieldErrors.password2 && <span id="password2-error" className="field-error">{fieldErrors.password2}</span>}
           </div>
           <button type="submit" className="btn primary" disabled={isSubmitting}>
             {isSubmitting ? 'Registering...' : 'Register'}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import PostAuthor from './PostAuthor'
@@ -7,15 +7,33 @@ import { getImageUrl } from '../utils/imageUtils'
 
 const PostItem = ({ postID, category, title, description, authorID, thumbnail, createdAt
  }) => {
+        const [imageLoaded, setImageLoaded] = useState(false);
+        const [imageError, setImageError] = useState(false);
+
         // Strip HTML first for consistent character counting
         const plainText = stripHTML(description);
         const shortDescription = plainText.length > 120 ? plainText.substr(0, 120) + '...' : plainText;
-        const postTitle = title.length > 50 ? title.substr(0, 50) + '...' : title; 
+        const postTitle = title.length > 50 ? title.substr(0, 50) + '...' : title;
+
+        const handleImageLoad = () => {
+            setImageLoaded(true);
+        };
+
+        const handleImageError = () => {
+            setImageError(true);
+            setImageLoaded(true);
+        };
 
     return (
         <article className="post">
-            <div className="post__thumbnail">
-                <img src={getImageUrl(thumbnail, 'thumbnail')} alt={title} />
+            <div className={`post__thumbnail ${!imageLoaded ? 'loading' : ''}`}>
+                <img
+                    src={getImageUrl(thumbnail, 'thumbnail')}
+                    alt={title}
+                    onLoad={handleImageLoad}
+                    onError={handleImageError}
+                    style={{ opacity: imageLoaded ? 1 : 0 }}
+                />
             </div>
             <div className="post__content">
                 <Link to={`/posts/${postID}`}>

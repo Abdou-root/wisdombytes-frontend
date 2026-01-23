@@ -88,9 +88,13 @@ const Login = () => {
               value={userData.email}
               onChange={changeInputHandler}
               className={fieldErrors.email ? 'error' : ''}
+              autoComplete="email"
               autoFocus
+              aria-label="Email address"
+              aria-invalid={fieldErrors.email ? 'true' : 'false'}
+              aria-describedby={fieldErrors.email ? 'email-error' : undefined}
             />
-            {fieldErrors.email && <span className="field-error">{fieldErrors.email}</span>}
+            {fieldErrors.email && <span id="email-error" className="field-error">{fieldErrors.email}</span>}
           </div>
           <div>
             <input
@@ -100,8 +104,12 @@ const Login = () => {
               value={userData.password}
               onChange={changeInputHandler}
               className={fieldErrors.password ? 'error' : ''}
+              autoComplete="current-password"
+              aria-label="Password"
+              aria-invalid={fieldErrors.password ? 'true' : 'false'}
+              aria-describedby={fieldErrors.password ? 'password-error' : undefined}
             />
-            {fieldErrors.password && <span className="field-error">{fieldErrors.password}</span>}
+            {fieldErrors.password && <span id="password-error" className="field-error">{fieldErrors.password}</span>}
           </div>
           <button type="submit" className="btn primary" disabled={isSubmitting}>
             {isSubmitting ? 'Logging in...' : 'Login'}

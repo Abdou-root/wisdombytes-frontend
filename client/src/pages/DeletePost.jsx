@@ -3,14 +3,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/userContext";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import Loader from "../components/Loader";
+import ConfirmModal from "../components/ConfirmModal";
 
 const DeletePost = ({ postId: id }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [error, setError] = useState(null);
 
   const { currentUser } = useContext(UserContext);
 
@@ -22,10 +24,7 @@ const DeletePost = ({ postId: id }) => {
   }, [currentUser, navigate]);
 
   const removePost = async () => {
-    // Confirmation dialog
-    const confirmed = window.confirm('Are you sure you want to delete this post? This action cannot be undone.');
-    if (!confirmed) return;
-
+    setShowConfirm(false);
     setIsLoading(true);
     try {
       const response = await axios.delete(
@@ -39,23 +38,42 @@ const DeletePost = ({ postId: id }) => {
           navigate("/");
         }
       }
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error deleting post:', error);
-      alert(error.response?.data?.message || 'Failed to delete post. Please try again.');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to delete post. Please try again.');
+    } finally {
       setIsLoading(false);
     }
   };
 
-  if(isLoading){
-    return <Loader/>
+  if (isLoading) {
+    return <Loader />;
   }
 
-
   return (
-    <Link className="btn sm danger" onClick={() => removePost(id)}>
-      Delete
-    </Link>
+    <>
+      <button className="btn sm danger" onClick={() => setShowConfirm(true)}>
+        Delete
+      </button>
+      <ConfirmModal
+        isOpen={showConfirm}
+        title="Delete Post"
+        message="Are you sure you want to delete this post? This action cannot be undone."
+        onConfirm={removePost}
+        onCancel={() => setShowConfirm(false)}
+        confirmText="Delete"
+        cancelText="Cancel"
+        isDanger={true}
+      />
+      <ConfirmModal
+        isOpen={!!error}
+        title="Error"
+        message={error || ''}
+        onConfirm={() => setError(null)}
+        onCancel={() => setError(null)}
+        confirmText="OK"
+        cancelText=""
+      />
+    </>
   );
 };
 

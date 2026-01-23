@@ -18,6 +18,7 @@ const CreatePost = () => {
   const [category, setCategory] = useState("Uncategorized");
   const [description, setDescription] = useState("");
   const [thumbnail, setThumbnail] = useState("");
+  const [thumbnailPreview, setThumbnailPreview] = useState("");
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -188,7 +189,20 @@ const CreatePost = () => {
             <input
               type="file"
               onChange={(e) => {
-                setThumbnail(e.target.files[0]);
+                const file = e.target.files[0];
+                setThumbnail(file);
+
+                // Create preview
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setThumbnailPreview(reader.result);
+                  };
+                  reader.readAsDataURL(file);
+                } else {
+                  setThumbnailPreview("");
+                }
+
                 if (fieldErrors.thumbnail) {
                   setFieldErrors(prev => {
                     const newErrors = { ...prev };
@@ -197,10 +211,16 @@ const CreatePost = () => {
                   });
                 }
               }}
-              accept="png, jpg, jpeg"
+              accept="image/png, image/jpeg, image/jpg"
               className={fieldErrors.thumbnail ? 'error' : ''}
+              aria-label="Post thumbnail image"
             />
             {fieldErrors.thumbnail && <span className="field-error">{fieldErrors.thumbnail}</span>}
+            {thumbnailPreview && (
+              <div className="thumbnail-preview">
+                <img src={thumbnailPreview} alt="Thumbnail preview" />
+              </div>
+            )}
           </div>
           <button type="submit" className="btn primary" disabled={isSubmitting}>
             {isSubmitting ? 'Creating...' : 'Create'}

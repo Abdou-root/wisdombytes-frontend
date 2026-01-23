@@ -10,6 +10,7 @@ import { getImageUrl } from "../utils/imageUtils";
 
 const UserProfile = () => {
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [avatar, setAvatar] = useState(""); // Server URL
   const [avatarPreview, setAvatarPreview] = useState(""); // Local file preview
   const [avatarFile, setAvatarFile] = useState(null); // File object for upload
@@ -72,8 +73,10 @@ const UserProfile = () => {
       setAvatar(response?.data.avatar);
       setAvatarPreview("");
       setAvatarFile(null);
+      setSuccessMessage("Avatar updated successfully!");
+      setTimeout(() => setSuccessMessage(""), 3000);
     } catch (error) {
-      console.log(error);
+      setError(error.response?.data?.message || "Failed to update avatar");
     }
   };
 
@@ -94,7 +97,6 @@ const UserProfile = () => {
       );
       if (response.status === 200) {
         // logout to re-login
-        console.log("logging out");
         navigate("/logout");
       }
     } catch (error) {
@@ -133,7 +135,7 @@ const UserProfile = () => {
                     setIsAvatarTouched(true);
                   }
                 }}
-                accept="png, jpg, jpeg"
+                accept="image/png, image/jpeg, image/jpg"
               />
               <label htmlFor="avatar" onClick={() => setIsAvatarTouched(true)}>
                 <FaEdit />
@@ -152,6 +154,7 @@ const UserProfile = () => {
 
           <form className="form profile__form" onSubmit={updateUserDetails}>
             {error && <p className="form__error-message">{error}</p>}
+            {successMessage && <p className="form__success-message">{successMessage}</p>}
             <input
               type="text"
               placeholder="Full Name"

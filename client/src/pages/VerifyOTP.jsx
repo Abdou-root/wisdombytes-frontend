@@ -1,21 +1,53 @@
 {/* Verify OTP component of the frontend */}
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
 const VerifyOTP = () => {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
   const navigate = useNavigate();
+
+  const userId = localStorage.getItem("userId");
+  const userEmail = localStorage.getItem("userEmail");
+
+  // Cooldown timer
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCooldown]);
 
   const changeInputHandler = (e) => {
     setOtp(e.target.value);
   };
-  const userId = localStorage.getItem("userId");
+
+  const handleResendOTP = async () => {
+    if (resendCooldown > 0 || !userId || !userEmail) return;
+
+    setIsResending(true);
+    setError("");
+    setMessage("");
+
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/users/resendOTP`,
+        { userId, email: userEmail }
+      );
+      setMessage("New OTP sent! Check your email.");
+      setResendCooldown(60);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to resend OTP");
+    } finally {
+      setIsResending(false);
+    }
+  };
 
   const verifyOtp = async (e) => {
     e.preventDefault();
@@ -34,6 +66,7 @@ const VerifyOTP = () => {
       setIsSubmitting(false);
       return;
     }
+
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/users/verifyOTP`,
@@ -43,7 +76,9 @@ const VerifyOTP = () => {
 
       if (result.status === "Verified") {
         setMessage(result.message);
-        setTimeout(() => navigate("/login"), 2000); // Redirect to login after 2 seconds
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userEmail");
+        setTimeout(() => navigate("/login"), 2000);
       } else {
         setError(result.message);
         setIsSubmitting(false);
@@ -63,17 +98,26 @@ const VerifyOTP = () => {
           {message && <p className="form__success-message">{message}</p>}
           <input
             type="text"
-            placeholder="Enter OTP"
+            placeholder="Enter 6-digit OTP"
             name="otp"
             value={otp}
             onChange={changeInputHandler}
+            maxLength={6}
           />
           <button type="submit" className="btn primary" disabled={isSubmitting}>
             {isSubmitting ? 'Verifying...' : 'Verify OTP'}
           </button>
         </form>
-        <small style={{ marginTop: '1rem', display: 'block' }}>
-          Didn't receive the code? <Link to="/register">Register again</Link> or contact support.
+        <small className="resend-otp-container">
+          Didn't receive the code?{' '}
+          <button
+            type="button"
+            onClick={handleResendOTP}
+            disabled={isResending || resendCooldown > 0 || !userEmail}
+            className="resend-otp-btn"
+          >
+            {isResending ? 'Sending...' : resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend OTP'}
+          </button>
         </small>
       </div>
     </section>

@@ -1,7 +1,7 @@
 {/* Header component of the frontend */}
 
 import React, { useState, useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Logo from "../images/logo1.png";
 import Logo2 from "../images/logo2.png";
 import { FaBars, FaPlus } from "react-icons/fa";
@@ -165,14 +165,14 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link to="/authors" onClick={closeNavHandler}>
+              <NavLink to="/authors" onClick={closeNavHandler} className={({ isActive }) => isActive ? 'active-link' : ''}>
                 Authors
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/logout" onClick={closeNavHandler}>
+              <NavLink to="/logout" onClick={closeNavHandler}>
                 Logout
-              </Link>
+              </NavLink>
             </li>
             <li>
               <Link to="#" id="theme-button" onClick={openThemeModal}>
@@ -184,14 +184,14 @@ const Header = () => {
         {!currentUser?._id && isNavActive && (
           <ul className="nav__menu">
             <li>
-              <Link to="/authors" onClick={closeNavHandler}>
+              <NavLink to="/authors" onClick={closeNavHandler} className={({ isActive }) => isActive ? 'active-link' : ''}>
                 Authors
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/login" onClick={closeNavHandler}>
+              <NavLink to="/login" onClick={closeNavHandler} className={({ isActive }) => isActive ? 'active-link' : ''}>
                 Login
-              </Link>
+              </NavLink>
             </li>
           </ul>
         )}

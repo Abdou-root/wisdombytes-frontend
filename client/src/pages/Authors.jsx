@@ -4,20 +4,23 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Loader from '../components/Loader'
+import AuthorSkeleton from '../components/AuthorSkeleton'
 import { getImageUrl } from '../utils/imageUtils';
 
 const Authors = () => {
   const [authors, setAuthors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const getAuthors = async () => {
       setIsLoading(true);
+      setError(null);
       try {
         const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/users`)
         setAuthors(response.data);
-      } catch (error) {
-        console.log(error);
+      } catch (err) {
+        setError("Failed to load authors. Please try again.");
       }
       setIsLoading(false);
     };
@@ -25,7 +28,29 @@ const Authors = () => {
   }, []);
 
   if(isLoading){
-    return <Loader/>
+    return (
+      <section className="authors">
+        <div className="container authors__container">
+          {[...Array(8)].map((_, index) => (
+            <AuthorSkeleton key={index} />
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="authors error-section">
+        <div className="container center">
+          <h2>Oops!</h2>
+          <p>{error}</p>
+          <button className="btn primary" onClick={() => window.location.reload()}>
+            Try Again
+          </button>
+        </div>
+      </section>
+    );
   }
 
   return (

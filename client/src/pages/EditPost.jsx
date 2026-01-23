@@ -18,6 +18,7 @@ const EditPost = () => {
   const [category, setCategory] = useState("Uncategorized");
   const [description, setDescription] = useState("");
   const [thumbnail, setThumbnail] = useState("");
+  const [thumbnailPreview, setThumbnailPreview] = useState("");
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,7 +52,7 @@ const EditPost = () => {
         // Initialize markdown value if switching later
         setMarkdownValue(turndownService.turndown(response.data.description));
       } catch (error) {
-        console.log(error)
+        setError(error.response?.data?.message || "Failed to load post");
       }
     }
 
@@ -210,12 +211,32 @@ const EditPost = () => {
           <div>
             <input
               type="file"
-              onChange={(e) => setThumbnail(e.target.files[0])}
-              accept="png, jpg, jpeg"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                setThumbnail(file);
+
+                // Create preview
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setThumbnailPreview(reader.result);
+                  };
+                  reader.readAsDataURL(file);
+                } else {
+                  setThumbnailPreview("");
+                }
+              }}
+              accept="image/png, image/jpeg, image/jpg"
+              aria-label="Post thumbnail image"
             />
             <small style={{ display: 'block', marginTop: '0.5rem', color: 'var(--color-gray-500)' }}>
               Leave empty to keep current thumbnail
             </small>
+            {thumbnailPreview && (
+              <div className="thumbnail-preview">
+                <img src={thumbnailPreview} alt="New thumbnail preview" />
+              </div>
+            )}
           </div>
           <button type="submit" className="btn primary" disabled={isSubmitting}>
             {isSubmitting ? 'Updating...' : 'Update'}

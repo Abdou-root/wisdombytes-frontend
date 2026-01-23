@@ -9,17 +9,19 @@ import { useParams } from "react-router-dom";
 const CategoryPosts = () => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
 
   const {category} = useParams();
   useEffect(() => {
     const fetchPosts = async () => {
       setIsLoading(true);
+      setError(null);
       try {
         const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/posts/categories/${category}`);
         setPosts(response?.data);
       } catch (err) {
-        console.log(err)
+        setError("Failed to load posts. Please try again.");
       }
 
       setIsLoading(false);
@@ -29,6 +31,20 @@ const CategoryPosts = () => {
 
   if(isLoading) {
     return <Loader/>
+  }
+
+  if (error) {
+    return (
+      <section className="posts error-section">
+        <div className="container center">
+          <h2>Oops!</h2>
+          <p>{error}</p>
+          <button className="btn primary" onClick={() => window.location.reload()}>
+            Try Again
+          </button>
+        </div>
+      </section>
+    );
   }
 
 

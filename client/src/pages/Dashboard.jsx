@@ -12,6 +12,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const { id } = useParams();
   const { currentUser } = useContext(UserContext);
@@ -26,6 +27,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       setIsLoading(true);
+      setError(null);
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/posts/users/${currentUser?._id}`,
@@ -34,8 +36,8 @@ const Dashboard = () => {
           }
         );
         setPosts(response.data);
-      } catch (error) {
-        console.log(error);
+      } catch (err) {
+        setError("Failed to load your posts. Please try again.");
       }
       setIsLoading(false);
     };
@@ -47,6 +49,20 @@ const Dashboard = () => {
     return <Loader />;
   }
 
+  if (error) {
+    return (
+      <section className="dashboard error-section">
+        <div className="container center">
+          <h2>Oops!</h2>
+          <p>{error}</p>
+          <button className="btn primary" onClick={() => window.location.reload()}>
+            Try Again
+          </button>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="dashboard">
       <div className="container dashboard__container">
@@ -56,7 +72,7 @@ const Dashboard = () => {
             + Create New Post
           </Link>
         </div>
-        
+
       {posts.length > 0 ? (
           <>
           {posts.map((post) => {
